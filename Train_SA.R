@@ -119,6 +119,8 @@ Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
     }
     
     # Calculate the pearson correlation coefficient
+    rho_sp <- cor(GR_tr, GR_guess_tr, method = "spearman")
+    # Calculate the pearson correlation coefficient
     rho_pr <- cor(GR_tr, GR_guess_tr, method = "pearson")
     # Calculate the average difference between the simulated 
     GR_mean_diff<-mean(abs(GR_guess_tr-GR_tr))
