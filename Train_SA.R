@@ -1,6 +1,6 @@
 # Note: R has no 0 index. All vector/matrix indices start from 1
 
-Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
+Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range, Iter=20000000){
   
   # num_exp (scalar): total number of data points
   # G (matrix): trait-mutation matrix
@@ -45,7 +45,7 @@ Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
   SA_Tfinal<-T_range[2]
   
   # Each annealing has 2 million steps
-  SA_numIters <- 2000000
+  SA_numIters <- Iter
   
   # Initialize the counter of iterations
   SA_iter <- 0
@@ -95,7 +95,7 @@ Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
     
     # Determine the value to be added to the selected matrix element. 
     if (pBad>1e-11){
-        delta<-runif(1, -sqrt(pBad), sqrt(pBad))  
+        delta<-runif(1, -pBad/10, pBad/10)  
     }
 
     L[[select]][whichRow, whichCol]<-L[[select]][whichRow, whichCol]+delta  
@@ -115,10 +115,10 @@ Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
     
     # The simulated growth rate of each strain is the dot product of its trait_genetic and its trait_environment vector
     for (i in 1:length(GR_tr)){
-      GR_guess_tr[i]<-TG_tr[,i]%*%TE_tr[,i]
+      GR_guess_tr[i]<-TG_tr[,i]%*%TE_tr[,i]/1500
     }
     
-    # Calculate the pearson correlation coefficient
+    # Calculate the spearman correlation coefficient
     rho_sp <- cor(GR_tr, GR_guess_tr, method = "spearman")
     # Calculate the pearson correlation coefficient
     rho_pr <- cor(GR_tr, GR_guess_tr, method = "pearson")
@@ -195,7 +195,7 @@ Train_SA<-function(num_exp, G, E, X_tr, Y_tr, GR_tr, obj_best, T_range){
         print(GR_guess_tr)
         cat("iter", best["iter"], "obj", best["obj"], "rho", best["rho"], "GRdif", best["GRdif"], "\n", file="run_report.txt", append=T) 
         
-        cat("Dot Production Prediction of Lab Growth Rates:\n", apply((G_best%*%X_tr)*(E_best%*%Y_tr), 2, sum), "\n", file="run_report.txt", append=T)
+        cat("Dot Production Prediction of Lab Growth Rates:\n", apply((G_best%*%X_tr)*(E_best%*%Y_tr)/1500, 2, sum), "\n", file="run_report.txt", append=T)
         cat("Lab Growth Rates:\n", GR_tr, "\n", file="run_report.txt", append=T)
         print(best["obj"])
         cat("Best obj is larger than the goal\n")
