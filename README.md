@@ -3,19 +3,22 @@
 Step 1: download all files;  
 Step 2: run R;  
 Step 3: open "Run_shell_C.R", reset the working directory by the setwd command in the first line;  
-Step 4: run "Run_shell_C.R".  
+Step 4: run program with "Rscript Run_shell_C.R *path_to_input_file seed traits threshold iteration_steps Num_expriment Num_replicate"  
 
 **Parameters:**   
+path_to_input_file: the location where the database is  
 seed: random seed  
 traits: number of traits  
+threshold: stop the simulation when the objective reaches the threshold  
+iteration_steps: number of iterations in the simulation  
+Num_experiment: which experiment is excluded from the training set and used for testing  
+Num_replicate: an experiment may have several biological replicates, what are their numbers in the database  
 
 
 **Files generated:**  
-run_report.txt: stores the pBad, temperature, objective function value, rho and difference between lab and simulated data every 10K steps  
-run_result.txt: stores G and E matrix generated after each round (2000000 steps)
-run_result_top.txt: no longer useful. Will be removed in future update
-training: scatter plot of simulation vs. lab data in training
-testing: scatter plot of simulation vs. lab data in testing
+run_report.txt: report the performance of the model every 10K steps  
+training.jpg: plot the the origial data of training set and the corresponding simulating results  
+testing.jpg: plot the test results 
 
 **Files (functions) used:**    
 **Merged_Data_4.csv**: the database with bacteria gene expression profile and environmental parameters  
