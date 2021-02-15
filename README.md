@@ -1,14 +1,14 @@
-# E_coli_Evolution  
+# E_coli_Evolution  (Still Updating)
 **How to run:**    
 Step 1: download all files;  
 Step 2: run R;  
-Step 3: open "Run.R", reset the working directory by the setwd command in the first line;  
-Step 4: run "Run.R".  
+Step 3: open "Run_shell_C.R", reset the working directory by the setwd command in the first line;  
+Step 4: run "Run_shell_C.R".  
 
 **Parameters:**   
 seed: random seed  
 traits: number of traits  
-K: the ratio of overall dataset size vs. testing dataset size. For example, if K = 4, then 75% data will be selected for training, and the remaining 25% will be used for testing  
+
 
 **Files generated:**  
 run_report.txt: stores the pBad, temperature, objective function value, rho and difference between lab and simulated data every 10K steps  
@@ -18,13 +18,16 @@ training: scatter plot of simulation vs. lab data in training
 testing: scatter plot of simulation vs. lab data in testing
 
 **Files (functions) used:**    
-**Main**: the main workflow of simulation, using all the functions below  
-**GetpBad**: test the change of pbad in a preliminary run with increasing values of candidate initial temperature and decreasing end temperature, and return the best range of temperature  
-**Preprocessing, Ins_right, Delete**: for any gene A, insert a new column 'A_normal'. For any experiment that has no mutations (deletion, insertion, SNP and replication) on the gene A, its value of A_normal is 1  
-**Kfold, None_zero_idx_same, Shuffle**: divide the data according to the papers they are from. For each paper that contributes num_exp samples to the dataset, a floor(num_exp/K) will be kept for testing  
-**Train_SA**: the main body of simulated annealing  
-**Validate**: apply the G and E matrices to testing data  
-**Draw**: draw the figures of "training" and "testing"  
+**Merged_Data_4.csv**: the database with bacteria gene expression profile and environmental parameters  
+**Main_new_C.R**: the main workflow of simulation  
+**Main_new_C_par.R**: the main workflow of simulation, implemented with Rcpp package parallel computing features  
+**Train_SA_C.cpp**: the training function using simulated annealing to find out a optimal solution, implemented in C++ to accelerate computing  
+**Func_Support.R**: all supportive functions, including:  
+*GetpBad*: test the change of pbad in a preliminary run with increasing values of candidate initial temperature and decreasing end temperature, and return the best range of temperature  
+*Preprocessing, Ins_right, Delete*: for any gene A, insert a new column 'A_normal'. For any experiment that has no mutations (deletion, insertion, SNP and replication) on the gene A, its value of A_normal is 1  
+*Kfold, None_zero_idx_same, Shuffle*: divide the data according to the papers they are from. For each paper that contributes num_exp samples to the dataset, a floor(num_exp/K) will be kept for testing  
+*Validate*: apply the G and E matrices to testing data  
+*Draw*: draw the figures of "training" and "testing"  
 
 **Brief introdution:**  
 The growth rates of E.coli are co-determined by the environmental conditions and genetics. Some environmental conditions (supplementation of nutrients and maintenance of physiological pH in the medium) are beneficial, some are not. E.coli also constantly evolves by mutating their genomes. In general, the mutations are random, leading to beneficial or detrimental outcomes, but those carrying beneficial mutations could outgrow those carrying bad ones and become dominant. Therefore, the growth rate is a good metric of microorganisms' adaption to the environments. Modeling the interaction of environments and genetics to predict the growth rates under such situations is our goal.
