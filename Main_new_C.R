@@ -1,5 +1,5 @@
 Main_new_C<-function(input, seed, traits, K, obj_best, Iter){
-  print(Iter)  
+
   DB<-read.csv(input, fileEncoding="latin1")
   DB_ori<-DB
   set.seed(seed)    
@@ -135,17 +135,15 @@ Main_new_C<-function(input, seed, traits, K, obj_best, Iter){
   
   result<-list()
   
-  norm_best<-0.03
-  rho_best<-0.8
-  
+   
   score<-vector("numeric")
   validation_score<-vector("numeric")
   
   GR_va_guess<-c()
   GR_va_all<-c()
   result_train<- vector(mode = "list", length = K)
-  cat("seed=", seed, "traits=", traits, "\n", file="run_report.txt")
-  cat("seed=", seed, "traits=", traits, "\n", file="run_result.txt")
+  cat("seed = ", seed, "traits = ", traits, "K = ", K, "\n", file="run_report.txt")
+  cat("seed = ", seed, "traits = ", traits, "K = ", K, "\n", file="run_result.txt")
   
   for (i in 1:K){
     
@@ -155,18 +153,19 @@ Main_new_C<-function(input, seed, traits, K, obj_best, Iter){
     G<-G_initial
     E<-E_initial
    
-    cat("K=", i, "\n")
-    cat("K=", i, "\n", file="run_report.txt", append=T)
+    cat("Training: part ", i, " in ", K, "\n")
+    cat("Training: part ", i, " in ", K, "\n", file="run_report.txt", append=T)
     
     
     cat("Initial G:\n", G, "\n", file="run_result.txt", append=T)
     cat("Initial E:\n", E, "\n", file="run_result.txt", append=T)
     
     
-    cat("K=", i, "\n", file="run_result.txt", append=T)
-    cat("K=", i, "\n", file="run_result_top.txt", append=T)
+    cat("Training: part ", i, " in ", K, "\n", file="run_result.txt", append=T)
+    cat("Training: part ", i, " in ", K, "\n", file="run_result_top.txt", append=T)
     
-    
+    best_global <<- c(10,10,10)
+    names(best_global) <<- c("Obj", "Rho", "Diff") 
     tr_index<-tr_row_index[[i]]
     va_index<-va_row_index[[i]]
     
@@ -180,7 +179,6 @@ Main_new_C<-function(input, seed, traits, K, obj_best, Iter){
     cat(length(GR_tr), "experiments used for training", "\n")
     cat(length(GR_va), "experiments used for testing", "\n") 
     SA_Tinit<-1
-    threshold<-0.5
     
     num_cycle<<-1
     num_round<<-1
@@ -188,33 +186,36 @@ Main_new_C<-function(input, seed, traits, K, obj_best, Iter){
     cat("Round ", num_round, "\n", "Goal of obj ", obj_best, "\n", file="run_report.txt", append=T)
     cat("Round ", num_round, "\n", "Goal of obj ", obj_best, "\n")
     
- #   while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tinit, threshold)<threshold){
- #     SA_Tinit<-SA_Tinit*10
- #   }
- #   SA_Tinit<-SA_Tinit/2
- #   while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tinit, threshold)>threshold){
- #    SA_Tinit<-SA_Tinit/2
- #   }
- #   
- #   SA_Tfinal<-SA_Tinit/10
- #  
- #   threshold<-1e-10
- #   while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tfinal, threshold)>threshold){      SA_Tfinal<-SA_Tfinal/10
- #   }
- #   SA_Tfinal<-SA_Tfinal*2
- #  while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tfinal, threshold)<threshold){
- #    SA_Tfinal<-SA_Tfinal*2
- #   }
+#    threshold<-0.5
+#    while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tinit, threshold)<threshold){
+#      SA_Tinit<-SA_Tinit*10
+#    }
+#    SA_Tinit<-SA_Tinit/2
+#    while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tinit, threshold)>threshold){
+#     SA_Tinit<-SA_Tinit/2
+#    }
+#    
+#    SA_Tfinal<-SA_Tinit/10
+#   
+#    threshold<-1e-10
+#    while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tfinal, threshold)>threshold){      
+#     SA_Tfinal<-SA_Tfinal/10
+#    }
+#    SA_Tfinal<-SA_Tfinal*2
+#    while(GetpBad(G, E, X_tr, Y_tr, GR_tr, SA_Tfinal, threshold)<threshold){
+#     SA_Tfinal<-SA_Tfinal*2
+#    }
     T_range<-c(500, 1e-5)
 #    T_range<-c(SA_Tinit, SA_Tfinal)
-    cat("Temperature range: ",T_range)  
+    cat("Temperature range: ", T_range, "\n")  
+    cat("Temperature range: ", T_range, "\n", file="run_report.txt", append=T)
     
     print("Rcpp compilation started")
-    cat("Rcpp version: ", packageDescription("Rcpp")$Version)
+    cat("Rcpp version: ", packageDescription("Rcpp")$Version, "\n")
     sourceCpp("./Train_SA_C.cpp") 
     print("Compilation finished")
-    cat("Iter is: ", Iter)
-    result_train[[i]]<-Train_SA_C(G, E, X_tr, Y_tr, GR_tr, obj_best, T_range, Iter)
+    cat("Iter is: ", Iter, "\n")
+    result_train[[i]]<-Train_SA_C(G, E, X_tr, Y_tr, GR_tr, X_va, Y_va, GR_va, obj_best, T_range, Iter)
     
     score<-append(score, result_train[[i]][[1]])
     
