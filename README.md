@@ -24,7 +24,6 @@ testing: scatter plot of simulation vs. lab data in testing
 **Train_SA_C.cpp**: the training function using simulated annealing to find out a optimal solution, implemented in C++ to accelerate computing  
 **Func_Support.R**: all supportive functions, including:  
 *GetpBad*: test the change of pbad in a preliminary run with increasing values of candidate initial temperature and decreasing end temperature, and return the best range of temperature  
-*Preprocessing, Ins_right, Delete*: for any gene A, insert a new column 'A_normal'. For any experiment that has no mutations (deletion, insertion, SNP and replication) on the gene A, its value of A_normal is 1  
 *Kfold, None_zero_idx_same, Shuffle*: divide the data according to the papers they are from. For each paper that contributes num_exp samples to the dataset, a floor(num_exp/K) will be kept for testing  
 *Validate*: apply the G and E matrices to testing data  
 *Draw*: draw the figures of "training" and "testing"  
