@@ -26,10 +26,11 @@ testing.jpg: plot the test results
 **Main_new_C_par.R**: the main workflow of simulation, implemented with Rcpp package parallel computing features  
 **Train_SA_C.cpp**: the training function using simulated annealing to find out a optimal solution, implemented in C++ to accelerate computing  
 **Func_Support.R**: all supportive functions, including:  
-*GetpBad*: test the change of pbad in a preliminary run with increasing values of candidate initial temperature and decreasing end temperature, and return the best range of temperature  
 *Kfold, None_zero_idx_same, Shuffle*: divide the data according to the papers they are from. For each paper that contributes num_exp samples to the dataset, a floor(num_exp/K) will be kept for testing  
 *Validate*: apply the G and E matrices to testing data  
 *Draw*: draw the figures of "training" and "testing"  
+**GetpBad.cpp**: main part of simulated annealing, using the current possibility of making "bad" predictions to decide whether to update an element in the gene expression and environmental parameter matrices. Implemented in C++ to accelerate the computation  
+**Getweight.cpp**: assign weights to each data point in the training dataset, based on how frequent its value (i.e. growth rates) is seen in the database. For example, most bacterial growth rates are between 0.5 and 0.8, then data points out of this range will be given larger weights so that the model will not only focus on those more common values    
 
 **Brief introdution:**  
 The growth rates of E.coli are co-determined by the environmental conditions and genetics. Some environmental conditions (supplementation of nutrients and maintenance of physiological pH in the medium) are beneficial, some are not. E.coli also constantly evolves by mutating their genomes. In general, the mutations are random, leading to beneficial or detrimental outcomes, but those carrying beneficial mutations could outgrow those carrying bad ones and become dominant. Therefore, the growth rate is a good metric of microorganisms' adaption to the environments. Modeling the interaction of environments and genetics to predict the growth rates under such situations is our goal.
